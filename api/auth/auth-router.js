@@ -17,19 +17,19 @@ router.post("/register", validateRoleName, (req, res, next) => {
       "role_name": "angel"
     }
   */
-  let { username, password } = req.body
-
-  const hash = bcrypt.hashSync(password, 8)
-
-  Users.add({ username, password:hash })
-    .then(user => {
-      res.status(200).json({
-        user_id: user.user_id,
-        username: user.username,
-        role_name: user.role_name
+    let { username, password } = req.body
+    let { role_name } = req
+    const hash = bcrypt.hashSync(password, 8)
+  
+    Users.add({ username, password:hash, role_name })
+      .then(user => {
+        res.status(201).json({
+          user_id: user.user_id,
+          username: user.username,
+          role_name: user.role_name
+        })
       })
-    })
-    .catch(next)
+      .catch(next)
 });
 
 
@@ -71,12 +71,12 @@ function buildToken(user) {
   const payload = {
     subject: user.user_id,
     username: user.username,
-    role: user.role_name,
-  }
+    role_name: user.role_name,
+  };
   const options = {
-    expiresIn: '1d'
-  }
-  return jwt.sign(payload, JWT_SECRET, options)
+    expiresIn: "1d",
+  };
+  return jwt.sign(payload, JWT_SECRET, options);
 }
 
 module.exports = router;

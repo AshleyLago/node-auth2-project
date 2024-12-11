@@ -40,7 +40,7 @@ async function findBy(filter) {
   */
   return await db('users as us')
     .join('roles as rl', 'us.role_id', 'rl.role_id')
-    .select('us.user_id', 'us.username', 'rl.role_name')
+    .select('us.user_id', 'us.username', 'us.password', 'rl.role_name')
     .where(filter)
  }
 
@@ -57,8 +57,8 @@ async function findById(user_id) {
   */
   return await db('users as us')
     .join('roles as rl', 'us.role_id', 'rl.role_id')
-    .select('us.user_id', 'us.username', 'rl.role_name')
-    .where('us.user_id', user_id)
+    .select('us.user_id', 'us.username', 'us.password', 'rl.role_name')
+    .where('us.user_id', user_id).first()
 }
 
 /**
